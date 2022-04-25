@@ -1,10 +1,10 @@
 {
-  "name": "carbon-tutorial",
+  "name": "orion-dashboard",
   "version": "0.0.0",
   "private": true,
-  "repository": "git@github.com:carbon-design-system/carbon-tutorial.git",
-  "bugs": "https://github.com/carbon-design-system/carbon-tutorial/issues",
-  "license": "Apache-2.0",
+  "repository": "git@github.com:Epistimio/orion-dashboard.git",
+  "bugs": "https://github.com/Epistimio/orion-dashboard/issues",
+  "license": "BSD",
   "scripts": {
     "build": "react-scripts build",
     "ci-check": "yarn format:diff",
