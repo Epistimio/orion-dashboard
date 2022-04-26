@@ -36,7 +36,8 @@
     "react-plotly.js": "^2.5.1",
     "react-router-dom": "5.0.0",
     "react-scripts": "4.0.1",
-    "react-sizeme": "^2.6.12"
+    "react-sizeme": "^2.6.12",
+    "serve": "^13.0.2"
   },
   "devDependencies": {
     "@commitlint/cli": "7.5.2",
