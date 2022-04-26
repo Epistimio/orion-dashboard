@@ -1,8 +1,7 @@
 FROM node:16-slim
 RUN mkdir /app
-ADD . /app
+ADD build /app
 WORKDIR /app
-RUN yarn
-RUN yarn build
+RUN npm install -g serve
 EXPOSE 3000
-CMD node_modules/.bin/serve -s build
+CMD serve -s .
