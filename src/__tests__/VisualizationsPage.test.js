@@ -1,9 +1,8 @@
 import React from 'react';
 import App from '../App';
-import { ApolloProvider } from 'react-apollo';
-import { HashRouter as Router } from 'react-router-dom';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+/* Use MemoryRouter to isolate history for each test */
+import { MemoryRouter } from 'react-router-dom';
 
 // Since I updated dependencies in package.json, this seems necessary.
 beforeEach(() => {
@@ -24,14 +23,16 @@ beforeEach(() => {
 
 test('Test if we switch to visualization page', async () => {
   // Load page
-  render(
-    <Router>
-      <App />
-    </Router>
-  );
+  render(<App />, { wrapper: MemoryRouter });
   // Let time for ExperimentNavBar to load experiments
   // to prevent warnings about async calls not terminated
-  expect(await screen.findByText(/2-dim-shape-exp/)).toBeInTheDocument();
+  expect(
+    await screen.findByText(
+      /2-dim-shape-exp/,
+      {},
+      { interval: 1000, timeout: 40000 }
+    )
+  ).toBeInTheDocument();
 
   // Make sure we are on default (landing) page
   expect(screen.queryByText(/Landing Page/)).toBeInTheDocument();
@@ -40,7 +41,7 @@ test('Test if we switch to visualization page', async () => {
   expect(screen.queryByText(/Nothing to display/)).toBeNull();
 
   // Get visualizations page link
-  const menu = screen.queryByText(/Visualizations/);
+  const menu = screen.queryByTitle(/Go to experiments visualizations/);
   expect(menu).toBeInTheDocument();
 
   // CLick on visualizations page link
@@ -53,20 +54,21 @@ test('Test if we switch to visualization page', async () => {
 
 test('Test if we can select and unselect experiments', async () => {
   // Load page
-  render(
-    <Router>
-      <App />
-    </Router>
+  render(<App />, { wrapper: MemoryRouter });
+  const experiment = await screen.findByText(
+    /2-dim-shape-exp/,
+    {},
+    { interval: 1000, timeout: 40000 }
   );
-  const experiment = await screen.findByText(/2-dim-shape-exp/);
   expect(experiment).toBeInTheDocument();
 
   // Switch to visualizations page
-  const menu = screen.queryByText(/Visualizations/);
+  const menu = screen.queryByTitle(/Go to experiments visualizations/);
   fireEvent.click(menu);
   expect((await screen.findAllByText(/Nothing to display/)).length).toBe(3);
 
   // Select an experiment
+  expect(experiment).toBeInTheDocument();
   fireEvent.click(experiment);
 
   // Check if plots are loaded
@@ -77,7 +79,7 @@ test('Test if we can select and unselect experiments', async () => {
         screen.queryByText(/Regret for experiment '2-dim-shape-exp'/)
       ).toBeInTheDocument();
     },
-    { timeout: 3000 }
+    { interval: 1000, timeout: 40000 }
   );
   expect(
     await screen.findByText(
@@ -112,7 +114,7 @@ test('Test if we can select and unselect experiments', async () => {
         screen.queryByText(/Regret for experiment '2-dim-shape-exp'/)
       ).toBeInTheDocument();
     },
-    { timeout: 3000 }
+    { interval: 1000, timeout: 40000 }
   );
   expect(
     await screen.findByText(
@@ -133,7 +135,7 @@ test('Test if we can select and unselect experiments', async () => {
         screen.queryByText(/Regret for experiment 'tpe-rosenbrock'/)
       ).toBeInTheDocument();
     },
-    { timeout: 3000 }
+    { interval: 1000, timeout: 40000 }
   );
   expect(
     await screen.findByText(

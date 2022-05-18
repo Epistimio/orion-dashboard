@@ -1,7 +1,7 @@
 import React from 'react';
-import ExperimentNavBar from '../components/ExperimentNavBar';
+import ExperimentNavBar from '../experiments/components/ExperimentNavBar';
 import { render, waitFor, screen } from '@testing-library/react';
-import { BackendContext } from '../BackendContext';
+import { BackendContext } from '../experiments/BackendContext';
 import userEvent from '@testing-library/user-event';
 
 // Since I updated dependencies in package.json, this seems necessary.
@@ -79,14 +79,26 @@ test('Check filter experiments with search field', async () => {
   const searchField = await screen.findByPlaceholderText('Search experiment');
   expect(searchField).toBeInTheDocument();
   userEvent.type(searchField, 'random');
-  await waitFor(() => checkExpectations([0, 0, 0, 0, 1, 0, 0]));
+  await waitFor(() => checkExpectations([0, 0, 0, 0, 1, 0, 0]), {
+    interval: 100,
+    timeout: 2000,
+  });
   userEvent.clear(searchField);
   userEvent.type(searchField, 'rosenbrock');
-  await waitFor(() => checkExpectations([0, 0, 0, 0, 1, 1, 0]));
+  await waitFor(() => checkExpectations([0, 0, 0, 0, 1, 1, 0]), {
+    interval: 100,
+    timeout: 2000,
+  });
   userEvent.clear(searchField);
   userEvent.type(searchField, 'dim-cat');
-  await waitFor(() => checkExpectations([0, 1, 0, 1, 0, 0, 0]));
+  await waitFor(() => checkExpectations([0, 1, 0, 1, 0, 0, 0]), {
+    interval: 100,
+    timeout: 2000,
+  });
   userEvent.clear(searchField);
   userEvent.type(searchField, 'unknown experiment');
-  await waitFor(() => checkExpectations([0, 0, 0, 0, 0, 0, 0]));
+  await waitFor(() => checkExpectations([0, 0, 0, 0, 0, 0, 0]), {
+    interval: 100,
+    timeout: 2000,
+  });
 });
